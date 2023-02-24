@@ -1,5 +1,4 @@
 const models = require("../models");
-const logger = require("../services/logger");
 const validate = require("../services/cars");
 
 const browse = (req, res) => {
@@ -11,13 +10,11 @@ const browse = (req, res) => {
         .then(([count]) => {
           res.status(200).json({ cars, pages: Math.ceil(count[0].pages / 50) });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
           res.sendStatus(500);
         });
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
       res.sendStatus(500);
     });
 };
@@ -32,8 +29,7 @@ const read = (req, res) => {
         res.send(rows[0]);
       }
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
       res.sendStatus(500);
     });
 };
@@ -51,12 +47,10 @@ const add = (req, res) => {
           id: createdCars[0].insertId,
         });
       })
-      .catch((err) => {
-        logger.error(err);
+      .catch(() => {
         res.status(500).Send("Error on adding a new car");
       });
   } else {
-    logger.error(error.details);
     res.status(422).send(error.details);
   }
 };
@@ -73,7 +67,6 @@ const deleteOne = (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(err);
       res.status(500).send(err);
     });
 };
@@ -83,7 +76,6 @@ const update = (req, res) => {
   const { id } = req.params;
   const validation = validate(car, "optional");
   if (validation) {
-    logger.error(validation.details);
     res.status(422).send(validation);
   } else {
     models.cars
@@ -95,8 +87,7 @@ const update = (req, res) => {
           res.sendStatus(204);
         }
       })
-      .catch((err) => {
-        logger.error(err);
+      .catch(() => {
         res.status(500).Send("Error on adding a new car");
       });
   }
