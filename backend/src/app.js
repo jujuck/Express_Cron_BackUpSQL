@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const cron = require("node-cron");
 
 // create express app
 
@@ -54,6 +55,11 @@ if (fs.existsSync(reactIndexFile)) {
     res.sendFile(reactIndexFile);
   });
 }
+
+cron.schedule("* * * * * ", () => console.warn("Hello World"));
+const backupDB = require("./services/backup");
+
+cron.schedule("* * * * *", () => backupDB());
 
 // ready to export
 
